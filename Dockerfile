@@ -1,4 +1,5 @@
-FROM marcblend/docker-circleci
+FROM ubuntu:16.04
+MAINTAINER Marc Tanis <marc@blendimc.com>
 
 # Install Needed Software
 RUN apt-get update  && \
@@ -8,9 +9,15 @@ add-apt-repository ppa:neovim-ppa/stable && \
 add-apt-repository ppa:mc3man/xerus-media && \
 add-apt-repository ppa:longsleep/golang-backports && \
 apt-get update
-RUN apt-get install -y sudo curl nodejs unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server 
+RUN apt-get install -y sudo curl nodejs unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq
 
 # Docker Compose
+# Install Docker Client
+RUN set -x && \
+            VER="17.06.0-ce" && \
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz && \
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz && \
+            mv /tmp/docker/* /usr/bin
 RUN curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
 sudo chmod +x /usr/local/bin/docker-compose
 
