@@ -3,30 +3,27 @@ MAINTAINER Marc Tanis <marc@blendimc.com>
 
 # Install Needed Software
 RUN apt-get update  && \
-apt-get install -y software-properties-common coreutils sysvinit-utils && \
+apt-get install -y curl apt-transport-https software-properties-common coreutils sysvinit-utils && \
 add-apt-repository -yu ppa:pi-rho/dev && \
 add-apt-repository ppa:neovim-ppa/stable && \
 add-apt-repository ppa:mc3man/xerus-media && \
 add-apt-repository ppa:longsleep/golang-backports && \
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable" && \
+apt-key fingerprint 0EBFCD88 && \
 apt-get update && \
-apt-get install -y sudo curl nodejs unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \ 
+apt-get install -y sudo docker-ce nodejs unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \ 
 rm -rf /var/lib/apt/lists/*
 
-# Docker Compose
-# Install Docker Client
-RUN set -x && \
-VER="17.03.0-ce" && \
-curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz && \
-tar -xz -C /tmp -f /tmp/docker-$VER.tgz && \
-mv /tmp/docker/* /usr/bin && \
-curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
-sudo chmod +x /usr/local/bin/docker-compose
-
+RUN pip3 install neovim docker-compose
 
 # SSH
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
-sed -i 's|[#]*PasswordAuthentication yes|PasswordAuthentication no|g' /etc/ssh/sshd_config && \
-sed -i 's|UsePAM yes|UsePAM no|g' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+#sed -i 's|[#]*PasswordAuthentication yes|PasswordAuthentication no|g' /etc/ssh/sshd_config && \
+#sed -i 's|UsePAM yes|UsePAM no|g' /etc/ssh/sshd_config
 EXPOSE 22
 
 # Setup Entrypoin
@@ -35,7 +32,6 @@ RUN chmod +x /entrypoint.sh
 
 # Setup User
 RUN groupadd -r user -g 1000 && \
-groupadd -r docker -g 1001 && \
 useradd -u 1000 -r -g user -m -d /home/user -s /sbin/nologin -c "Dev User" user && \
 usermod -a -G docker user && \
 mkdir /home/user/go && \ 
@@ -50,12 +46,15 @@ WORKDIR /home/user
 
 # Setup Neovim after switching user
 ADD https://github.com/marcato15/dotfiles/archive/neovim.zip /home/user
-RUN sudo pip3 install neovim && \
-sudo unzip -j neovim.zip -d ~/dotfiles && \
+RUN sudo unzip -j neovim.zip -d ~/dotfiles && \
+sudo chown -R user:user /home/user  && \
+mkdir -p /home/user/.vim/plugged && \
 cd dotfiles && \
 ./make.sh && \ 
 nvim +GoInstallBinaries +qall || true && \
 nvim +UpdateRemotePlugins +qall || true
+
+ADD https://raw.githubusercontent.com/BlendMarketing/vimbox/master/lite-docker-compose.yml /home/user/docker-compose.yml
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]

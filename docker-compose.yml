@@ -1,38 +1,21 @@
 version: "3"
 services:
     dockerbox:
-        image: blendmarketing/vimbox 
+        image: blendmarketing/dockerbox 
         command: "tail -f /dev/null"
         hostname: dockerbox
         ports:
             - "22:22"
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - dockerbox-code:/home/user/code
-            - dockerbox-go:/home/user/go/src
-            - ~/.ssh:/home/user/.ssh
-        working_dir: /home/user/code
-        restart: always
-    nginx-proxy:
-        image: jwilder/nginx-proxy
-        volumes:
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-        ports:
-            - 80:80
-        restart: always
-    dnsmasq:
-        image: andyshinn/dnsmasq
-        restart: always
-        ports: 
+            - "80:80"
             - "53535:53/tcp"
             - "53535:53/udp"
-        cap_add:
-            - NET_ADMIN
-        command: "--address=/dev/192.168.57.1"
-networks:
-    default:
-        external:
-            name: dockerbox
+        volumes:
+            - docker-library:/var/lib/docker
+            - ~/code:/home/user/code
+            - ~/go/src:/home/user/go/src
+            - ~/.ssh:/home/user/.ssh
+        working_dir: /home/user/code
+        privileged: true
+        restart: always
 volumes:
-    dockerbox-code:
-    dockerbox-go:
+  docker-library:
