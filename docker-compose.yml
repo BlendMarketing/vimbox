@@ -7,8 +7,6 @@ services:
         ports:
             - "22:22"
             - "80:80"
-            - "53535:53/tcp"
-            - "53535:53/udp"
         volumes:
             - docker-library:/var/lib/docker
             - ~/code:/home/user/code
@@ -17,5 +15,14 @@ services:
         working_dir: /home/user/code
         privileged: true
         restart: always
+    dnsmasq:
+        image: andyshinn/dnsmasq
+        restart: always
+        ports: 
+         - "53535:53/tcp"
+         - "53535:53/udp"
+        cap_add:
+           - NET_ADMIN
+        command: "--address=/dev/192.168.57.1"
 volumes:
-  docker-library:
+    docker-library:
