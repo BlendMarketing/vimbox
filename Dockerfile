@@ -3,19 +3,19 @@ MAINTAINER Marc Tanis <marc@blendimc.com>
 
 # Install Needed Software
 RUN apt-get update  && \
-apt-get install -y software-properties-common && \
+apt-get install -y software-properties-common coreutils sysvinit-utils && \
 add-apt-repository -yu ppa:pi-rho/dev && \
 add-apt-repository ppa:neovim-ppa/stable && \
 add-apt-repository ppa:mc3man/xerus-media && \
 add-apt-repository ppa:longsleep/golang-backports && \
 apt-get update && \
-apt-get install -y sudo curl nodejs unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \
+apt-get install -y sudo curl nodejs unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \ 
 rm -rf /var/lib/apt/lists/*
 
 # Docker Compose
 # Install Docker Client
 RUN set -x && \
-VER="17.06.0-ce" && \
+VER="17.03.0-ce" && \
 curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz && \
 tar -xz -C /tmp -f /tmp/docker-$VER.tgz && \
 mv /tmp/docker/* /usr/bin && \
