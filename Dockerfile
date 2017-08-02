@@ -3,21 +3,24 @@ MAINTAINER Marc Tanis <marc@blendimc.com>
 
 # Install Needed Software
 RUN apt-get update  && \
-apt-get install -y curl apt-transport-https software-properties-common coreutils sysvinit-utils && \
+apt-get install -y curl python-software-properties apt-transport-https software-properties-common coreutils sysvinit-utils && \
 add-apt-repository -yu ppa:pi-rho/dev && \
 add-apt-repository ppa:neovim-ppa/stable && \
 add-apt-repository ppa:mc3man/xerus-media && \
 add-apt-repository ppa:longsleep/golang-backports && \
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
 add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable" && \
 apt-key fingerprint 0EBFCD88 && \
 apt-get update && \
-apt-get install -y sudo docker-ce nodejs npm unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \ 
+apt-get install -y sudo docker-ce nodejs npm iputils-ping unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \ 
 npm install -g yarn && \
+ln -s /usr/bin/nodejs /usr/bin/node && \
 rm -rf /var/lib/apt/lists/*
+
 
 RUN pip3 install neovim 
 
