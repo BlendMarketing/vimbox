@@ -1,9 +1,10 @@
-version: "3"
+version: "2"
 services:
     dockerbox:
         image: blendmarketing/dockerbox 
         command: "tail -f /dev/null"
         hostname: dockerbox
+        cpu_quota: 5000
         ports:
             - "22:22"
             - "80:80"
