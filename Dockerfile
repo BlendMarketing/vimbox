@@ -62,8 +62,6 @@ cd dotfiles && \
 nvim +GoInstallBinaries +qall || true && \
 nvim +UpdateRemotePlugins +qall || true
 
-ADD https://raw.githubusercontent.com/BlendMarketing/vimbox/master/lite-docker-compose.yml /home/user/docker-compose.yml
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]
 
