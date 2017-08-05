@@ -52,16 +52,6 @@ chmod 0440 /etc/sudoers.d/user
 USER user
 WORKDIR /home/user
 
-# Setup Neovim after switching user
-ADD https://github.com/marcato15/dotfiles/archive/neovim.zip /home/user
-RUN sudo unzip -j neovim.zip -d ~/dotfiles && \
-sudo chown -R user:user /home/user  && \
-mkdir -p /home/user/.vim/plugged && \
-cd dotfiles && \
-./make.sh && \ 
-nvim +GoInstallBinaries +qall || true && \
-nvim +UpdateRemotePlugins +qall || true
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]
 
