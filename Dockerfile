@@ -16,12 +16,9 @@ add-apt-repository \
    stable" && \
 apt-key fingerprint 0EBFCD88 && \
 apt-get update && \
-apt-get install -y docker-ce nodejs iputils-ping unzip whois software-properties-common git dialog python3-pip tmux-next neovim golang-go openssh-server awscli jq && \ 
+apt-get install -y docker-ce nodejs iputils-ping unzip whois software-properties-common git dialog python3-pip golang-go openssh-server awscli jq && \ 
 npm install -g yarn && \
 rm -rf /var/lib/apt/lists/*
-
-
-RUN pip3 install neovim 
 
 # Docker Compose
 RUN curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && \
