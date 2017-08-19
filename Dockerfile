@@ -16,7 +16,7 @@ add-apt-repository \
    stable" && \
 apt-key fingerprint 0EBFCD88 && \
 apt-get update && \
-apt-get install -y docker-ce nodejs iputils-ping unzip whois software-properties-common git dialog python3-pip golang-go openssh-server awscli jq && \ 
+apt-get install -y vim neovim tmux-next docker-ce nodejs iputils-ping unzip whois software-properties-common git dialog python3-pip golang-go openssh-server awscli jq && \ 
 npm install -g yarn && \
 rm -rf /var/lib/apt/lists/*
 

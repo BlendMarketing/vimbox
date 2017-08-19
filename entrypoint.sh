@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ~/dotfiles && ./make.sh
+
 # Start the ssh server
 sudo /etc/init.d/ssh restart && \
 	sudo /etc/init.d/docker start
