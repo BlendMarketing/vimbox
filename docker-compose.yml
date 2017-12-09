@@ -1,28 +1,31 @@
-version: "2"
+version: "3"
 services:
-    dockerbox:
-        image: blendmarketing/dockerbox 
-        command: "tail -f /dev/null"
-        hostname: dockerbox
-        ports:
-            - "22:22"
-            - "80:80"
-            - "3306:3306"
+    nginx-proxy:
+        image: jwilder/nginx-proxy
         volumes:
-            - docker-library:/var/lib/docker
-            - home:/home/user/
-        working_dir: /home/user/code
-        privileged: true
-        restart: unless-stopped
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        ports:
+            - 80:80
+        restart: always
+    mysql:
+        image: mysql:5.6
+        restart: always
+        ports:
+            - 3306:3306
+        volumes:
+            - ~/.mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=dockerboxpassword
     dnsmasq:
         image: andyshinn/dnsmasq
-        restart: unless-stopped
+        restart: always
         ports: 
-         - "53535:53/tcp"
-         - "53535:53/udp"
+         - "53:53/tcp"
+         - "53:53/udp"
         cap_add:
            - NET_ADMIN
-        command: "--address=/dev/127.0.0.1"
-volumes:
-    docker-library:
-    home:
+        command: "--address=/dev/52.14.109.72"
+networks:
+    default:
+        external:
+            name: dockerbox

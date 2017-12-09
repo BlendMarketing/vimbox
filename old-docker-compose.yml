@@ -1,0 +1,28 @@
+version: "2"
+services:
+    dockerbox:
+        image: blendmarketing/dockerbox 
+        command: "tail -f /dev/null"
+        hostname: dockerbox
+        ports:
+            - "22:22"
+            - "80:80"
+            - "3306:3306"
+        volumes:
+            - docker-library:/var/lib/docker
+            - home:/home/user/
+        working_dir: /home/user/code
+        privileged: true
+        restart: unless-stopped
+    dnsmasq:
+        image: andyshinn/dnsmasq
+        restart: unless-stopped
+        ports: 
+         - "53535:53/tcp"
+         - "53535:53/udp"
+        cap_add:
+           - NET_ADMIN
+        command: "--address=/dev/127.0.0.1"
+volumes:
+    docker-library:
+    home:
