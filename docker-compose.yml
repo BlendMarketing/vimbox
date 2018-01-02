@@ -1,4 +1,4 @@
-version: "3"
+version: "3" 
 services:
     nginx-proxy:
         image: jwilder/nginx-proxy
@@ -24,7 +24,7 @@ services:
          - "53:53/udp"
         cap_add:
            - NET_ADMIN
-        command: "--address=/dev/52.14.109.72"
+        command: "--address=/test/52.14.109.72"
 networks:
     default:
         external:
